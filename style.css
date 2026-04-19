@@ -197,6 +197,24 @@ input[type="text"],
     animation: dot-pop 250ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+.mask-cursor {
+    display: none;
+    width: 2px;
+    height: 16px;
+    background: var(--accent);
+    margin-left: 2px;
+    animation: cursor-blink 1s step-end infinite;
+}
+
+.animated-input-container input:focus + .animated-mask .mask-cursor {
+    display: inline-block;
+}
+
+@keyframes cursor-blink {
+    from, to { opacity: 1; }
+    50% { opacity: 0; }
+}
+
 @keyframes dot-pop {
     from { transform: scale(0) translateY(10px); opacity: 0; }
     to { transform: scale(1) translateY(0); opacity: 1; }

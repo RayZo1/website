@@ -138,20 +138,30 @@ const loginMask = document.getElementById("login-key-mask");
 
 loginInput.addEventListener("input", (e) => {
     const val = loginInput.value;
-    const dots = loginMask.children;
+    const dots = Array.from(loginMask.children).filter(c => c.classList.contains("mask-dot"));
     
     // Add dots if length increased
     while (dots.length < val.length) {
         const dot = document.createElement("span");
         dot.className = "mask-dot";
-        loginMask.appendChild(dot);
+        // Insert before the cursor (if it exists)
+        const cursor = loginMask.querySelector(".mask-cursor");
+        if (cursor) loginMask.insertBefore(dot, cursor);
+        else loginMask.appendChild(dot);
+        dots.push(dot);
     }
     
     // Remove dots if length decreased
     while (dots.length > val.length) {
-        loginMask.removeChild(loginMask.lastChild);
+        const lastDot = dots.pop();
+        loginMask.removeChild(lastDot);
     }
 });
+
+// Initialize cursor
+const cursor = document.createElement("span");
+cursor.className = "mask-cursor";
+loginMask.appendChild(cursor);
 
 loginInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") doLogin();
