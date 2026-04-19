@@ -158,8 +158,8 @@ input[type="text"],
     background: var(--bg-input);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    color: transparent; /* Hide text, keep cursor visible via caret-color if needed */
-    caret-color: var(--accent);
+    color: transparent; /* Hide text */
+    caret-color: transparent; /* Hide native cursor */
     font-family: var(--mono);
     font-size: 13px;
     outline: none;
