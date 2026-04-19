@@ -19,7 +19,10 @@
                 </div>
                 <div class="login-separator"></div>
                 <div class="input-group">
-                    <input type="password" id="login-key" placeholder="license" autocomplete="off" spellcheck="false" maxlength="50">
+                    <div class="animated-input-container">
+                        <input type="password" id="login-key" placeholder="license" autocomplete="off" spellcheck="false" maxlength="50">
+                        <div id="login-key-mask" class="animated-mask"></div>
+                    </div>
                 </div>
                 <button id="btn-login" class="btn btn-primary" onclick="doLogin()">Login</button>
                 <div id="login-error" class="status-msg hidden"></div>

@@ -133,7 +133,22 @@ function doLogout() {
 }
 
 // Enter key on login
-document.getElementById("login-key").addEventListener("keydown", (e) => {
+const loginInput = document.getElementById("login-key");
+const loginMask = document.getElementById("login-key-mask");
+
+loginInput.addEventListener("input", (e) => {
+    const val = loginInput.value;
+    
+    // Clear mask and rebuild based on length
+    loginMask.innerHTML = "";
+    for (let i = 0; i < val.length; i++) {
+        const dot = document.createElement("span");
+        dot.className = "mask-dot";
+        loginMask.appendChild(dot);
+    }
+});
+
+loginInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") doLogin();
 });
 
