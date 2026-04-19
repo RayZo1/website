@@ -7,7 +7,7 @@
 // Set this to your API URL (justrunmyapp or localhost for dev)
 const API_BASE = window.location.hostname === "localhost"
     ? "http://localhost:8080"
-    : "https://a14093-4e0b.f.jrnm.app"; // Your justrunmyapp URL
+    : "https://acee.h.jrnm.app"; // Your justrunmyapp URL
 
 // --- State ---
 let token = null;
@@ -366,9 +366,9 @@ async function loadLicenses() {
             <td>
                 <div class="table-actions">
                     ${l.banned
-                        ? `<button class="btn btn-small btn-secondary" onclick="unbanLicense('${l.key}')">Unban</button>`
-                        : `<button class="btn btn-small btn-danger" onclick="banLicense('${l.key}')">Ban</button>`
-                    }
+                ? `<button class="btn btn-small btn-secondary" onclick="unbanLicense('${l.key}')">Unban</button>`
+                : `<button class="btn btn-small btn-danger" onclick="banLicense('${l.key}')">Ban</button>`
+            }
                     <button class="btn btn-small btn-secondary" onclick="resetHwid('${l.key}')">Reset</button>
                     <button class="btn btn-small btn-danger" onclick="deleteLicense('${l.key}')">×</button>
                 </div>
