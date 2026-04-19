@@ -138,13 +138,18 @@ const loginMask = document.getElementById("login-key-mask");
 
 loginInput.addEventListener("input", (e) => {
     const val = loginInput.value;
+    const dots = loginMask.children;
     
-    // Clear mask and rebuild based on length
-    loginMask.innerHTML = "";
-    for (let i = 0; i < val.length; i++) {
+    // Add dots if length increased
+    while (dots.length < val.length) {
         const dot = document.createElement("span");
         dot.className = "mask-dot";
         loginMask.appendChild(dot);
+    }
+    
+    // Remove dots if length decreased
+    while (dots.length > val.length) {
+        loginMask.removeChild(loginMask.lastChild);
     }
 });
 
