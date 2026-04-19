@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ace — Secure cloud configuration portal">
+    <title>Ace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Login View -->
+        <div id="view-login" class="view active">
+            <div class="login-card">
+                <div class="brand">
+                    <span class="brand-name">ACE</span>
+                    <span class="brand-tag">Portal</span>
+                </div>
+                <div class="login-separator"></div>
+                <div class="input-group">
+                    <input type="text" id="login-key" placeholder="License key" autocomplete="off" spellcheck="false" maxlength="50">
+                </div>
+                <button id="btn-login" class="btn btn-primary" onclick="doLogin()">Login</button>
+                <div id="login-error" class="status-msg hidden"></div>
+            </div>
+        </div>
+
+        <!-- Dashboard View -->
+        <div id="view-dashboard" class="view">
+            <div class="page-container">
+                <header class="page-header">
+                    <div class="header-left">
+                        <span class="brand-name">ACE</span>
+                        <span class="header-sep">|</span>
+                        <span class="header-label" id="dash-license"></span>
+                    </div>
+                    <button class="btn btn-ghost" onclick="doLogout()">Logout</button>
+                </header>
+
+                <div class="info-bar">
+                    <div class="info-item">
+                        <span class="info-label">Type</span>
+                        <span class="info-value" id="dash-type">—</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Expiry</span>
+                        <span class="info-value" id="dash-expiry">—</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">HWID</span>
+                        <span class="info-value" id="dash-hwid">—</span>
+                    </div>
+                </div>
+
+                <div class="action-grid">
+                    <div class="action-card" onclick="downloadLatest()">
+                        <div class="action-icon">↓</div>
+                        <div class="action-text">
+                            <h3>Download Latest</h3>
+                            <p>Get the latest Ace build</p>
+                        </div>
+                        <div id="download-status" class="action-status hidden"></div>
+                    </div>
+                    <div class="action-card" onclick="showView('configs')">
+                        <div class="action-icon">⚙</div>
+                        <div class="action-text">
+                            <h3>Edit Configs</h3>
+                            <p>Manage your cloud configurations</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configs View -->
+        <div id="view-configs" class="view">
+            <div class="page-container">
+                <header class="page-header">
+                    <div class="header-left">
+                        <button class="btn btn-ghost" onclick="showView('dashboard')">← Back</button>
+                        <span class="header-label">Configurations</span>
+                    </div>
+                    <button class="btn btn-secondary" id="btn-new-config" onclick="createConfig()">+ New Config</button>
+                </header>
+
+                <div class="configs-layout">
+                    <div class="config-sidebar">
+                        <div id="config-list" class="config-list"></div>
+                    </div>
+                    <div class="config-editor-panel">
+                        <div id="config-empty" class="config-empty">
+                            <p>Select a config to edit, or create a new one.</p>
+                        </div>
+                        <div id="config-editor" class="config-editor hidden">
+                            <div class="editor-header">
+                                <input type="text" id="config-name" class="config-name-input" placeholder="Config name" maxlength="50">
+                                <div class="editor-actions">
+                                    <button class="btn btn-small btn-accent" onclick="saveConfig()">Save</button>
+                                    <button class="btn btn-small btn-ghost" onclick="deleteConfig()">Delete</button>
+                                </div>
+                            </div>
+                            <textarea id="config-text" class="config-textarea" spellcheck="false" placeholder="-- Paste your config.lua here"></textarea>
+                            <div class="editor-footer">
+                                <div id="config-status" class="status-msg hidden"></div>
+                                <button id="btn-activate" class="btn btn-small" onclick="activateConfig()">Set Active</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin View -->
+        <div id="view-admin" class="view">
+            <div class="page-container">
+                <header class="page-header">
+                    <div class="header-left">
+                        <span class="brand-name">ACE</span>
+                        <span class="header-sep">|</span>
+                        <span class="header-label">Admin Panel</span>
+                    </div>
+                    <button class="btn btn-ghost" onclick="doLogout()">Logout</button>
+                </header>
+
+                <!-- Admin Stats -->
+                <div class="admin-stats">
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-total">0</span>
+                        <span class="stat-label">Total Licenses</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-active">0</span>
+                        <span class="stat-label">Active</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-banned">0</span>
+                        <span class="stat-label">Banned</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-version">—</span>
+                        <span class="stat-label">Version</span>
+                    </div>
+                </div>
+
+                <!-- Admin Tabs -->
+                <div class="admin-tabs">
+                    <button class="tab-btn active" onclick="switchAdminTab('licenses', this)">Licenses</button>
+                    <button class="tab-btn" onclick="switchAdminTab('upload', this)">Upload Build</button>
+                    <button class="tab-btn" onclick="switchAdminTab('server', this)">Server Config</button>
+                </div>
+
+                <!-- License Management -->
+                <div id="admin-licenses" class="admin-section">
+                    <div class="section-header">
+                        <h2>License Management</h2>
+                        <div class="gen-controls">
+                            <select id="gen-duration">
+                                <option value="day">Day</option>
+                                <option value="week">Week</option>
+                                <option value="month">Month</option>
+                                <option value="perm">Permanent</option>
+                            </select>
+                            <button class="btn btn-accent" onclick="generateLicense()">Generate</button>
+                        </div>
+                    </div>
+                    <div id="license-table-wrap" class="table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Key</th>
+                                    <th>Type</th>
+                                    <th>Time Left</th>
+                                    <th>HWID</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="license-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Upload Build -->
+                <div id="admin-upload" class="admin-section hidden">
+                    <h2>Upload Build</h2>
+                    <div class="upload-zone" id="upload-zone">
+                        <div class="upload-content">
+                            <span class="upload-icon">📦</span>
+                            <p>Drag & drop a <strong>.zip</strong> file here, or click to select</p>
+                            <input type="file" id="upload-file" accept=".zip" hidden>
+                        </div>
+                    </div>
+                    <div class="upload-form">
+                        <input type="text" id="upload-version" placeholder="Version (e.g. v2.1)" class="input-field">
+                        <button class="btn btn-accent" onclick="uploadBuild()" id="btn-upload">Upload</button>
+                    </div>
+                    <div id="upload-status" class="status-msg hidden"></div>
+                    <div id="current-build" class="current-build"></div>
+                </div>
+
+                <!-- Server Config -->
+                <div id="admin-server" class="admin-section hidden">
+                    <h2>Server Configuration</h2>
+                    <div class="server-config-grid">
+                        <div class="config-field">
+                            <label>Version</label>
+                            <div class="field-row">
+                                <input type="text" id="srv-version" class="input-field" placeholder="v1">
+                                <button class="btn btn-small btn-accent" onclick="updateVersion()">Set</button>
+                            </div>
+                        </div>
+                        <div class="config-field full-width">
+                            <label>Default Config (config.lua)</label>
+                            <textarea id="srv-config" class="config-textarea small" spellcheck="false"></textarea>
+                            <button class="btn btn-small btn-accent" onclick="updateServerConfig()">Save Config</button>
+                        </div>
+                        <div class="config-field full-width">
+                            <label>Script (source.lua)</label>
+                            <textarea id="srv-script" class="config-textarea small" spellcheck="false"></textarea>
+                            <button class="btn btn-small btn-accent" onclick="updateScript()">Save Script</button>
+                        </div>
+                    </div>
+                    <div id="server-status" class="status-msg hidden"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
