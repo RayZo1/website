@@ -572,7 +572,29 @@ function copyToClipboard(text) {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  Init
+//  Interface Protection
 // ═══════════════════════════════════════════════════════════
+
+(function initProtection() {
+    // Disable right-click
+    document.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+    }, false);
+
+    // Disable common DevTools shortcuts
+    document.addEventListener("keydown", (e) => {
+        // F12
+        if (e.key === "F12") {
+            e.preventDefault();
+            return false;
+        }
+
+        // Ctrl + Shift + I/J/C or Ctrl + U
+        if (e.ctrlKey && (e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C") || e.key === "u")) {
+            e.preventDefault();
+            return false;
+        }
+    }, false);
+})();
 
 showView("login");

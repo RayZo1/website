@@ -134,9 +134,11 @@ html, body {
 }
 
 input[type="text"],
+input[type="password"],
+textarea,
 .input-field {
     width: 100%;
-    padding: 10px 14px;
+    padding: 12px 16px;
     background: var(--bg-input);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
@@ -144,7 +146,34 @@ input[type="text"],
     font-family: var(--font);
     font-size: 13px;
     outline: none;
-    transition: border-color var(--transition);
+    transition: all var(--transition);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+.input-field:focus {
+    border-color: var(--accent-dim);
+    background: var(--bg-hover);
+    box-shadow: 0 0 0 2px var(--accent-bg);
+}
+
+input[type="text"]::placeholder,
+textarea::placeholder {
+    color: var(--text-dim);
+    transition: opacity var(--transition);
+}
+
+input:focus::placeholder,
+textarea:focus::placeholder {
+    opacity: 0.5;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.5;
 }
 
 .animated-input-container {
